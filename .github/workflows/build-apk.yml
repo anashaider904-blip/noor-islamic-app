@@ -42,6 +42,10 @@ jobs:
               if perm not in s:
                   s = s.replace('<application', '<uses-permission android:name="' + perm + '"/>\n    <application', 1)
                   changed = True
+          admob_meta = '<meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-9808430389913183~1592743607"/>'
+          if 'com.google.android.gms.ads.APPLICATION_ID' not in s:
+              s = s.replace('</application>', '    ' + admob_meta + '\n    </application>', 1)
+              changed = True
           if changed:
               p.write_text(s)
           print(p.read_text())
