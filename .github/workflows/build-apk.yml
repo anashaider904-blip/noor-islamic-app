@@ -17,6 +17,16 @@ jobs:
         run: |
           cd project
           if [ ! -d android ]; then flutter create . --project-name noor_islamic_app; fi
+          python3 << 'PYEOF'
+          import pathlib
+          p = pathlib.Path('android/app/src/main/AndroidManifest.xml')
+          s = p.read_text()
+          for perm in ['android.permission.INTERNET', 'android.permission.ACCESS_FINE_LOCATION', 'android.permission.ACCESS_COARSE_LOCATION']:
+              if perm not in s:
+                  s = s.replace('<application', '<uses-permission android:name="' + perm + '"/>\n    <application', 1)
+          p.write_text(s)
+          print(p.read_text())
+          PYEOF
           flutter pub get
           flutter build apk --release
       - uses: actions/upload-artifact@v4
